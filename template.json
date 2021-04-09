@@ -30,7 +30,7 @@
         },
         "SubscrpitonID":{
             "type":"string",
-            "defaultValue":"[subscription().id]",
+            "defaultValue":"[subscription().subscriptionId]",
             "metadata": {
                 "description": "Your subscription ID"
             }
@@ -63,7 +63,7 @@
                     "contentVersion": "1.0.0.0",
                     "parameters": {
                         "Default Subscription": {
-                            "defaultValue": "[parameters('LogicApp_name')]",
+                            "defaultValue": "[parameters('SubscrpitonID')]",
                             "type": "String"
                         }
                     },
@@ -153,7 +153,7 @@
                                     {
                                         "name": "Link",
                                         "type": "string",
-                                        "value": "https://management.azure.com/subscriptions/2c04f58e-4071-4bc0-9d45-99d7e47bc3f0/providers/Microsoft.Web/connections?api-version=2018-07-01-preview"
+                                        "value": "https://management.azure.com/subscriptions/@{parameters('Default Subscription')}/providers/Microsoft.Web/connections?api-version=2018-07-01-preview"
                                     }
                                 ]
                             }
@@ -182,7 +182,7 @@
                                     {
                                         "name": "Logic App resource link",
                                         "type": "string",
-                                        "value": "https://management.azure.com/subscriptions/2c04f58e-4071-4bc0-9d45-99d7e47bc3f0/providers/Microsoft.Logic/workflows?api-version=2016-06-01"
+                                        "value": "https://management.azure.com/subscriptions/@{parameters('Default Subscription')}/providers/Microsoft.Logic/workflows?api-version=2016-06-01"
                                     }
                                 ]
                             }
