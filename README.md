@@ -1,35 +1,27 @@
-# Azure Logic Apps - AS2 Send Receive
+# Logic App backuper
 
-![Azure Public Test Date](https://azurequickstartsservice.blob.core.windows.net/badges/201-logic-app-as2-send-receive/PublicLastTestDate.svg)
-![Azure Public Test Result](https://azurequickstartsservice.blob.core.windows.net/badges/201-logic-app-as2-send-receive/PublicDeployment.svg)
+## Backup your Logic App Integrations - Automatically backup your Logic Apps, API connections and On-premises Data Gateway correlations  with Logic App itself.
 
-![Azure US Gov Last Test Date](https://azurequickstartsservice.blob.core.windows.net/badges/201-logic-app-as2-send-receive/FairfaxLastTestDate.svg)
-![Azure US Gov Last Test Result](https://azurequickstartsservice.blob.core.windows.net/badges/201-logic-app-as2-send-receive/FairfaxDeployment.svg)
-
-![Best Practice Check](https://azurequickstartsservice.blob.core.windows.net/badges/201-logic-app-as2-send-receive/BestPracticeResult.svg)
-![Cred Scan Check](https://azurequickstartsservice.blob.core.windows.net/badges/201-logic-app-as2-send-receive/CredScanResult.svg)
 
 [![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fjoeshen117%2FAzure-ARM-template-deploy-test1%2Fmain%2Ftemplate.json)
-[![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-quickstart-templates%2Fmaster%2F201-logic-app-as2-send-receive%2Fazuredeploy.json)  
-[![Visualize](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.svg?sanitize=true)](http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-quickstart-templates%2Fmaster%2F201-logic-app-as2-send-receive%2Fazuredeploy.json)
 
-This template creates an AS2 Send Receive workflow by using Azure Logic Apps to create the following Azure resources:
 
-- Integration accounts for two partners, Contoso and Fabrikam, along with the necessary artifacts, which are partners and agreements.
+This template creates an SaaS solution to backup all your Logic App resources using a Logic App and an Integration account:
 
-- Logic apps between Fabrikam Sales and Contoso, which demonstrate Sync AS2 Send Receive.
+- A Logic apps which extracts the resources information and map the correalation between Logic Apps, API connection resrouces and On-premises Data Gateways.
 
-- Logic apps between Fabrikam Finance and Contoso, which demonstrate ASync AS2 Send Receive.
+- An Integration accounts in free tier sku to enable Inline Javascript code action in the Logic App.
 
-**Important**: This template creates and deploys two Standard-tier integration accounts, which incur costs. For more information, see [Azure Logic Apps pricing](https://azure.microsoft.com/pricing/details/logic-apps/) and [Pricing and billing models for Azure Logic Apps](https://docs.microsoft.com/azure/logic-apps/logic-apps-pricing).
 
-`Tags: AS2, Logic Apps, Integration Account, Enterprise Integration`
+**Important**: This template creates mutiple Azure resources, which incur costs. For more information, see [Azure Logic Apps pricing](https://azure.microsoft.com/pricing/details/logic-apps/) and [Pricing and billing models for Azure Logic Apps](https://docs.microsoft.com/azure/logic-apps/logic-apps-pricing).
+
+`Tags: Logic Apps, Integration Account, API connections, On-premises Data Gateways`
 
 ## Deployment steps
 
-Either select the **Deploy to Azure** button at the top of this page or follow the instructions for command line deployment by using the scripts in the root of this repo.
+Click the **Deploy to Azure** button at the top of this page, and then put in the parameter values in the opened broswer page.
 
-## Usage
+<!-- ## Usage
 
 To test your logic apps after deployment completes, you can perform these steps:
 
@@ -64,4 +56,4 @@ To test your logic apps after deployment completes, you can perform these steps:
 Learn more about Azure Logic Apps:
 
 * [Azure Logic Apps](https://docs.microsoft.com/azure/logic-apps/logic-apps-overview)
-* [B2B Processing capabilities in Logic Apps](https://docs.microsoft.com/azure/logic-apps/logic-apps-enterprise-integration-overview)
+* [B2B Processing capabilities in Logic Apps](https://docs.microsoft.com/azure/logic-apps/logic-apps-enterprise-integration-overview) -->
