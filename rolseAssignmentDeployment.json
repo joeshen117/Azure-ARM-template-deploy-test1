@@ -1,0 +1,27 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "principalId": {
+        "type": "string",
+        "metadata": {
+          "description": "principalId if the user that will be given contributor access to the resourceGroup"
+        }
+      }
+    },
+    "variables": {
+      "roleAssignmentName": "[guid(subscription().id, parameters('principalId'), 'acdd72a7-3385-48ef-bd42-f606fba81ae7')]"
+     },
+    "resources": [
+      {
+        "type": "Microsoft.Authorization/roleAssignments",
+        "apiVersion": "2020-04-01-preview",
+        "name": "[variables('roleAssignmentName')]",
+        "properties": {
+          "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'acdd72a7-3385-48ef-bd42-f606fba81ae7')]",
+          "principalId": "[parameters('principalId')]",
+          "scope": "[subscription().id]"
+        }
+      }
+    ]
+  }
