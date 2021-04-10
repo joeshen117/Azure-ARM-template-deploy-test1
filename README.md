@@ -8,7 +8,7 @@
 
 This template deploys a SaaS solution to backup all your Logic App related resources information utilizing a Logic App and an Integration account:
 
-- A Logic apps which extracts the resources information via API reuqests and map the correlation between Logic Apps, API connection resrouces and On-premises Data Gateways.
+- A Logic apps which extracts the resources information via API requests and map the correlation between Logic Apps, API connection resources and On-premises Data Gateways.
 
 - A free tier Integration to enable Inline JavaScript code action in the Logic App.
 
@@ -22,7 +22,7 @@ This template deploys a SaaS solution to backup all your Logic App related resou
 
   - An Azure account and subscription. If you don't have a subscription, [Sign up for a free Azure account](https://azure.microsoft.com/free/).
 
-  - Make sure the account which you are using to deploy the resources has the permissions to add role assignments on a subscription level.
+  - Make sure the account which you are using to for deployment has the permissions to add role assignments on a subscription scope.
 
 ## Deployment steps
 
@@ -60,7 +60,7 @@ Using the data structure of the output from **"Execute JavaScript code"** action
   Add a ***Create CSV table*** action and a ***Create blob*** action to backup the correlation csv file to a blob storage container.
 
 - #### **Put the data in a SQL DB**
-  Use a ***For each*** loop and a ***Inser row*** action to populate the data into a Azure SQL database table. 
+  Use a ***For each*** loop and a ***Insert row*** action to populate the data into a Azure SQL database table. 
 
 ## Data processing principal
 
@@ -99,19 +99,6 @@ Using the data structure of the output from **"Execute JavaScript code"** action
       }
       ...
    ]
-
-   ```
-- Similarly, orphan On-premises Data Gateways will be recorded with only **Gateway** property existing.
-   ```json
-      [
-         ...
-         {
-            LogicApp:null,
-            Connection:null,
-            Gateway:"OrphanGateway1"
-         }
-         ...
-      ]
 
    ```
 

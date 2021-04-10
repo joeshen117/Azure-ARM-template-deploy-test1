@@ -1,0 +1,337 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "LogicApp_name": {
+            "defaultValue": "LogicApp-backuper",
+            "type": "String"
+        },
+        "IntegrationAccount_name": {
+            "defaultValue": "LogicApp-backuper-IntegrationAccount",
+            "type": "String"
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "Location of the Logic App."
+            }
+        },
+        "builtInRoleType": {
+            "type": "string",
+            "defaultValue": "LogicAppContributor"
+        },
+        "rbacGuid": {
+            "type": "string",
+            "defaultValue": "[newGuid()]",
+            "metadata": {
+                "description": "A new GUID used to identify the role assignment"
+            }
+        },
+        "SubscrpitonID":{
+            "type":"string",
+            "defaultValue":"[subscription().subscriptionId]",
+            "metadata": {
+                "description": "Your subscription ID"
+            }
+        }
+    },
+    "variables": {
+        "LogicAppContributor": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '87a39d53-fc1b-424a-814c-f7e04687dc9e')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+             "dependsOn": [
+                "[parameters('IntegrationAccount_name')]"
+            ],
+            "name": "[parameters('LogicApp_name')]",
+            "location": "[parameters('location')]",
+            "identity": {
+                "principalId": null,
+                "tenantId": null,
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "state": "Enabled",
+                "integrationAccount": {
+                    "id": "[resourceId('Microsoft.Logic/integrationAccounts', parameters('IntegrationAccount_name'))]"
+                },
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "Default Subscription": {
+                            "defaultValue": "[parameters('SubscrpitonID')]",
+                            "type": "String"
+                        }
+                    },
+                    "triggers": {
+                        "manual": {
+                            "type": "Request",
+                            "kind": "Http",
+                            "inputs": {
+                                "schema": {
+                                    "properties": {
+                                        "subscription": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "actions": {
+                        "Create_CSV_table": {
+                            "runAfter": {
+                                "Map_correlations": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Table",
+                            "inputs": {
+                                "format": "CSV",
+                                "from": "@outputs('Map_correlations')?['body']"
+                            }
+                        },
+                        "Format_Logic_App_list": {
+                            "runAfter": {
+                                "Until_2": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Select",
+                            "inputs": {
+                                "from": "@variables('Logic App list')",
+                                "select": {
+                                    "Connection": "@item()?['properties']?['parameters']?['$connections']?['value']",
+                                    "name": "@item()?['name']",
+                                    "resourceID": "@item()?['id']"
+                                }
+                            }
+                        },
+                        "Format_connection_list": {
+                            "runAfter": {
+                                "Until": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Select",
+                            "inputs": {
+                                "from": "@variables('Connection list')",
+                                "select": {
+                                    "gateways": "@item()?['properties']?['parameterValues']?['gateway']?['id']",
+                                    "name": "@item()?['name']",
+                                    "resourceID": "@item()?['id']"
+                                }
+                            }
+                        },
+                        "Initialize_Connection_list": {
+                            "runAfter": {},
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "Connection list",
+                                        "type": "array",
+                                        "value": []
+                                    }
+                                ]
+                            }
+                        },
+                        "Initialize_Connection_resource_Link": {
+                            "runAfter": {
+                                "Initialize_Connection_list": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "Link",
+                                        "type": "string",
+                                        "value": "https://management.azure.com/subscriptions/@{parameters('Default Subscription')}/providers/Microsoft.Web/connections?api-version=2018-07-01-preview"
+                                    }
+                                ]
+                            }
+                        },
+                        "Initialize_Logic_App_list": {
+                            "runAfter": {},
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "Logic App list",
+                                        "type": "array"
+                                    }
+                                ]
+                            }
+                        },
+                        "Initialize_Logic_App_resource_link": {
+                            "runAfter": {
+                                "Initialize_Logic_App_list": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "Logic App resource link",
+                                        "type": "string",
+                                        "value": "https://management.azure.com/subscriptions/@{parameters('Default Subscription')}/providers/Microsoft.Logic/workflows?api-version=2016-06-01"
+                                    }
+                                ]
+                            }
+                        },
+                        "Map_correlations": {
+                            "runAfter": {
+                                "Format_Logic_App_list": [
+                                    "Succeeded"
+                                ],
+                                "Format_connection_list": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "JavaScriptCode",
+                            "inputs": {
+                                "code": "var LA = workflowContext.actions.Format_Logic_App_list.outputs.body\r\nvar FC = workflowContext.actions.Format_connection_list.outputs.body\r\nvar result = []\r\nvar used = new Set()\r\nLA.forEach(e=>{\r\n    try{\r\n        if (e.Connection == null){result.push(\r\n            {\r\n                LogicApp:e.resourceID,\r\n                Connection:null,\r\n                Gateway:null\r\n            })\r\n        }else{\r\n            (Object.entries(e.Connection).map(e=>e[1].connectionId)).forEach(e1=>{\r\n                used.add(e1)\r\n                result.push({\r\n                    LogicApp:e.resourceID,\r\n                    Connection:e1,\r\n                    Gateway:FC.find(e2 => e2.resourceID == e1).gateways\r\n                })\r\n            })\r\n        }\r\n    }catch(err){}\r\n})\r\nresult.push.apply(result,FC.filter(e=>{\r\n    return !used.has(e.resourceID)\r\n}).map(e=>{\r\n    return(\r\n        {\r\n            LogicApp:null,\r\n            Connection:e.resourceID,\r\n            Gateway:e.gateways\r\n        }\r\n    )\r\n}))\r\nreturn result"
+                            }
+                        },
+                        "Until": {
+                            "actions": {
+                                "For_each_API_Connection": {
+                                    "foreach": "@body('Get_Connection')?['value']",
+                                    "actions": {
+                                        "Append_to_array_variable_2": {
+                                            "runAfter": {},
+                                            "type": "AppendToArrayVariable",
+                                            "inputs": {
+                                                "name": "Connection list",
+                                                "value": "@items('For_each_API_Connection')"
+                                            }
+                                        }
+                                    },
+                                    "runAfter": {
+                                        "Get_Connection": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "Foreach"
+                                },
+                                "Get_Connection": {
+                                    "runAfter": {},
+                                    "type": "Http",
+                                    "inputs": {
+                                        "authentication": {
+                                            "type": "ManagedServiceIdentity"
+                                        },
+                                        "method": "GET",
+                                        "uri": "@variables('Link')"
+                                    }
+                                },
+                                "Update_Get_Connection_link": {
+                                    "runAfter": {
+                                        "For_each_API_Connection": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "SetVariable",
+                                    "inputs": {
+                                        "name": "Link",
+                                        "value": "@{body('Get_Connection')?['nextLink']}"
+                                    }
+                                }
+                            },
+                            "runAfter": {
+                                "Initialize_Connection_resource_Link": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "expression": "@equals(length(variables('Link')), 0)",
+                            "limit": {
+                                "count": 60,
+                                "timeout": "PT1H"
+                            },
+                            "type": "Until"
+                        },
+                        "Until_2": {
+                            "actions": {
+                                "For_each_Logic_App": {
+                                    "foreach": "@body('Get_Logic_App')?['value']",
+                                    "actions": {
+                                        "Append_to_array_variable": {
+                                            "runAfter": {},
+                                            "type": "AppendToArrayVariable",
+                                            "inputs": {
+                                                "name": "Logic App list",
+                                                "value": "@items('For_each_Logic_App')"
+                                            }
+                                        }
+                                    },
+                                    "runAfter": {
+                                        "Get_Logic_App": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "Foreach"
+                                },
+                                "Get_Logic_App": {
+                                    "runAfter": {},
+                                    "type": "Http",
+                                    "inputs": {
+                                        "authentication": {
+                                            "type": "ManagedServiceIdentity"
+                                        },
+                                        "method": "GET",
+                                        "uri": "@variables('Logic App resource link')"
+                                    }
+                                },
+                                "Update_Get_Logic_App_link": {
+                                    "runAfter": {
+                                        "For_each_Logic_App": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "SetVariable",
+                                    "inputs": {
+                                        "name": "Logic App resource link",
+                                        "value": "@{body('Get_Logic_App')?['nextLink']}"
+                                    }
+                                }
+                            },
+                            "runAfter": {
+                                "Initialize_Logic_App_resource_link": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "expression": "@equals(length(variables('Logic App resource link')), 0)",
+                            "limit": {
+                                "count": 60,
+                                "timeout": "PT1H"
+                            },
+                            "type": "Until"
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {}
+            }
+        },
+        {
+            "type": "Microsoft.Logic/integrationAccounts",
+            "apiVersion": "2016-06-01",
+            "name": "[parameters('IntegrationAccount_name')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "Free"
+            },
+            "properties": {
+                "state": "Enabled"
+            }
+        }
+    ]
+}
