@@ -30,7 +30,7 @@
         },
         "SubscrpitonID":{
             "type":"string",
-            "defaultValue":"[subscription().subscriptionId]",
+            "defaultValue":"[subscription().id]",
             "metadata": {
                 "description": "Your subscription ID"
             }
@@ -63,7 +63,7 @@
                     "contentVersion": "1.0.0.0",
                     "parameters": {
                         "Default Subscription": {
-                            "defaultValue": "[parameters('SubscrpitonID')]",
+                            "defaultValue": "[subscription().id]",
                             "type": "String"
                         }
                     },
@@ -153,7 +153,7 @@
                                     {
                                         "name": "Link",
                                         "type": "string",
-                                        "value": "https://management.azure.com/subscriptions/@{parameters('Default Subscription')}/providers/Microsoft.Web/connections?api-version=2018-07-01-preview"
+                                        "value": "https://management.azure.com/subscriptions/2c04f58e-4071-4bc0-9d45-99d7e47bc3f0/providers/Microsoft.Web/connections?api-version=2018-07-01-preview"
                                     }
                                 ]
                             }
@@ -182,7 +182,7 @@
                                     {
                                         "name": "Logic App resource link",
                                         "type": "string",
-                                        "value": "https://management.azure.com/subscriptions/@{parameters('Default Subscription')}/providers/Microsoft.Logic/workflows?api-version=2016-06-01"
+                                        "value": "https://management.azure.com/subscriptions/2c04f58e-4071-4bc0-9d45-99d7e47bc3f0/providers/Microsoft.Logic/workflows?api-version=2016-06-01"
                                     }
                                 ]
                             }
@@ -331,6 +331,35 @@
             },
             "properties": {
                 "state": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "name": "nestedTemplate1",
+            "properties": {
+                "mode": "Incremental",
+                "template": 
+                {
+                    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                    },
+                    "variables": {
+                    },
+                    "resources": [
+                    {
+                        "type": "Microsoft.Authorization/roleAssignments",
+                        "apiVersion": "2020-04-01-preview",
+                        "name": "[guid(subscription().id)]",
+                        "properties": {
+                        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'acdd72a7-3385-48ef-bd42-f606fba81ae7')]",
+                        "principalId": "[reference(parameters('LogicApp_name'), '2017-07-01', 'Full').identity.principalId]",
+                        "scope": "[subscription().id]"
+                        }
+                    }
+                    ]
+                }
             }
         }
     ]
