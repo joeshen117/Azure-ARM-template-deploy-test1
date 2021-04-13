@@ -332,23 +332,6 @@
             "properties": {
                 "state": "Enabled"
             }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2020-10-01",
-            "name": "linkedTemplate",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri":"https://raw.githubusercontent.com/joeshen117/Azure-ARM-template-deploy-test1/main/rolseAssignmentDeployment.json",
-                    "contentVersion":"1.0.0.0"
-                },
-                "parameters":{
-                    "principalId": {
-                        "value": "[reference(parameters('LogicApp_name'), '2017-07-01', 'Full').identity.principalId]"
-                    }
-                }
-            }
         }
     ]
 }
