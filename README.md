@@ -32,12 +32,11 @@ This template deploys a SaaS solution to backup all your Logic App related resou
 
 2. Navigate to the **Identity** blade and Add a role assignment to the new Logic App with System Managed Identity.
    
-   <img src="https://github.com/joeshen117/Azure-ARM-template-deploy-test1/blob/main/images/Add-role-assignment.png?raw=true" width="500">
+   <img src="https://github.com/joeshen117/Azure-ARM-template-deploy-test1/blob/main/images/Add-role-assignment.png?raw=true" width="700">
 
 3. Assign a **Reader** role to the Logic App on a subscription scope. 
    
-   ![add-role-assignment](https://github.com/joeshen117/Azure-ARM-template-deploy-test1/blob/main/images/new-role-assignment.png?raw=true | width=500)
-
+    <img src="https://github.com/joeshen117/Azure-ARM-template-deploy-test1/blob/main/images/new-role-assignment.png?raw=true" width="700">
 ## Data delivery options
 
 With the pre-built definitions, the deployed Logic App is capable of retrieve and process the correlations into following format.
@@ -61,17 +60,17 @@ Using the data structure of the output from **"Execute JavaScript code"** action
 - #### **Send out correlation information in a csv file via email**
   Add a ***Create CSV table*** action and a ***Send an email (V2)*** action to send the formatted data to an inbox periodically.
 
-   ![Create CSV and send email](https://github.com/joeshen117/Azure-ARM-template-deploy-test1/blob/main/images/send-email.png?raw=true | width=500)
+   <img src="https://github.com/joeshen117/Azure-ARM-template-deploy-test1/blob/main/images/send-email.png?raw=true" width="700">
 
 - #### **Format the data into csv file and store it to a blob storage**
   Add a ***Create CSV table*** action and a ***Create blob*** action to backup the correlation csv file to a blob storage container.
 
-  ![Create CSV and save to blob](https://github.com/joeshen117/Azure-ARM-template-deploy-test1/blob/main/images/save-to-blob.png?raw=true | width=500)
+  <img src="https://github.com/joeshen117/Azure-ARM-template-deploy-test1/blob/main/images/save-to-blob.png?raw=true" width="700">
 
 - #### **Put the data in a SQL DB**
   Use a ***For each*** loop and a ***Insert row*** action to populate the data into a Azure SQL database table. 
 
-  ![Save to SQL](https://github.com/joeshen117/Azure-ARM-template-deploy-test1/blob/main/images/insert-to-sql.png?raw=true | width=500)
+  <img src="https://github.com/joeshen117/Azure-ARM-template-deploy-test1/blob/main/images/insert-to-sql.png?raw=true" width="700">
 
   **Import**: Please make sure you have created suitable table with 3 columns in type of CHAR to store the extracted data.
 
