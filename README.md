@@ -37,6 +37,7 @@ This template deploys a SaaS solution to backup all your Logic App related resou
 3. Assign a **Reader** role to the Logic App on a subscription scope. 
    
     <img src="https://github.com/joeshen117/Azure-ARM-template-deploy-test1/blob/main/images/new-role-assignment.png?raw=true" width="700">
+    
 ## Data delivery options
 
 With the pre-built definitions, the deployed Logic App is capable of retrieve and process the correlations into following format.
