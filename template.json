@@ -84,18 +84,6 @@
                         }
                     },
                     "actions": {
-                        "Create_CSV_table": {
-                            "runAfter": {
-                                "Map_correlations": [
-                                    "Succeeded"
-                                ]
-                            },
-                            "type": "Table",
-                            "inputs": {
-                                "format": "CSV",
-                                "from": "@outputs('Map_correlations')?['body']"
-                            }
-                        },
                         "Format_Logic_App_list": {
                             "runAfter": {
                                 "Until_2": [
