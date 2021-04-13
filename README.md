@@ -32,7 +32,7 @@ This template deploys a SaaS solution to backup all your Logic App related resou
 
 2. Navigate to the **Identity** blade and Add a role assignment to the new Logic App with System Managed Identity.
    
-   ![Move-to-identity](https://github.com/joeshen117/Azure-ARM-template-deploy-test1/blob/main/images/Add-role-assignment.png?raw=true | width=500)
+   <img src="https://github.com/joeshen117/Azure-ARM-template-deploy-test1/blob/main/images/Add-role-assignment.png?raw=true" width="500">
 
 3. Assign a **Reader** role to the Logic App on a subscription scope. 
    
@@ -74,7 +74,7 @@ Using the data structure of the output from **"Execute JavaScript code"** action
   ![Save to SQL](https://github.com/joeshen117/Azure-ARM-template-deploy-test1/blob/main/images/insert-to-sql.png?raw=true | width=500)
 
   **Import**: Please make sure you have created suitable table with 3 columns in type of CHAR to store the extracted data.
-  
+
 ## Data processing principal
 
 - Logic Apps with two or more API connections will be processed into mutiple records.
