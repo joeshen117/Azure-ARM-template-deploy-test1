@@ -340,7 +340,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri":"https://raw.githubusercontent.com/joeshen117/Azure-ARM-template-deploy-test1/main/rolseAssignmentDeployment.json",
+                    "uri":"https://raw.githubusercontent.com/joeshen117/Azure-ARM-template-deploy-test1/main/Archive/rolseAssignmentDeployment.json",
                     "contentVersion":"1.0.0.0"
                 },
                 "parameters":{
